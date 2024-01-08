@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     foreach (auto btn, digitBTNs) {
         connect(btn,SIGNAL(clicked()),this,SLOT(btnNumclicked()));
     }
-    connect(ui->PI,SIGNAL(clicked()),this,SLOT(on_PI_clicked()));
+
 //    connect(ui->btnNum0,SIGNAL(clicked()),this,SLOT(btnNumclicked()));
 //    connect(ui->btnNum1,SIGNAL(clicked()),this,SLOT(btnNumclicked()));
 //    connect(ui->btnNum2,SIGNAL(clicked()),this,SLOT(btnNumclicked()));
@@ -33,11 +33,14 @@ MainWindow::MainWindow(QWidget *parent)
 //    connect(ui->btnNum7,SIGNAL(clicked()),this,SLOT(btnNumclicked()));
 //    connect(ui->btnNum8,SIGNAL(clicked()),this,SLOT(btnNumclicked()));
 //    connect(ui->btnNum9,SIGNAL(clicked()),this,SLOT(btnNumclicked()));
+    connect(ui->PI, SIGNAL(clicked()), this, SLOT(btnNumclicked()));
 
     connect(ui->jiahao,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
     connect(ui->jianhao,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
     connect(ui->chenghao,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
     connect(ui->chuhao,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
+    connect(ui->XY,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
+    connect(ui->mod,SIGNAL(clicked()),this,SLOT(btnBinaryOperatorClicked()));
 
     connect(ui->daoshu,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
     connect(ui->baifenhao,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
@@ -46,6 +49,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->sin,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
     connect(ui->cos,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
     connect(ui->tan,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
+    connect(ui->ln,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
+    connect(ui->log,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
+    connect(ui->TenX,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
+    connect(ui->Abs,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
+    connect(ui->Fac,SIGNAL(clicked()),this,SLOT(btnUnaryOperatorClicked()));
+
+
 
 }
 
@@ -74,6 +84,10 @@ QString MainWindow::calculation(bool *ok)
             result = operand1 * operand2;
         } else if (op == "/") {
             result = operand1 / operand2;
+        }else if(op=="x^y"){
+            result = qPow(operand1, operand2);
+        }else if(op=="mod"){
+            result = fmod(operand1,operand2);
         }
 
         operands.push_back(QString::number(result));
@@ -113,6 +127,26 @@ void MainWindow::btnUnaryOperatorClicked()
         else if(op=="tan"){
             result = qTan(qDegreesToRadians(result));
         }
+        else if(op=="ln"){
+            result = qLn(result);
+        }
+        else if(op=="log"){
+            result = qLn(result) / qLn(10);
+        }
+        else if(op=="10^x"){
+            result = qPow(10, result);
+        }
+        else if(op=="|x|"){
+            if(result<0)
+                result=-result;
+        }
+        else if(op=="n!"){
+            int value=1;
+            for (int i = 1; i <= result; i++) {
+                value *= i;
+            }
+            result=value;
+        }
         ui->display->setText(QString :: number(result));
     }
 }
@@ -124,6 +158,10 @@ void MainWindow::btnNumclicked()
         digit="";
     if(digit!="0"&&operand=="0")
         operand="";
+    if(digit=="PI"){
+        digit="";
+        operand="3.1415926";
+    }
     operand+=digit;
     ui->display->setText(operand);
 }
@@ -196,13 +234,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::on_zhengfu_clicked()
 {
-    if (!operand.isEmpty())
-    {
-        double currentOperand = operand.toDouble();
-        currentOperand *= -1;
-        operand = QString::number(currentOperand);
-        ui->display->setText(operand);
-    }
+    double currentOperand = ui->display->text().toDouble();
+    currentOperand *= -1;
+    operand = QString::number(currentOperand);
+    ui->display->setText(operand);
 }
 
 
@@ -212,12 +247,4 @@ void MainWindow::on_qingchu_clicked()
     ui->display->setText(operand);
 }
 
-
-void MainWindow::on_PI_clicked()
-{
-    QString P = qobject_cast<QPushButton *>(sender())->text();
-    if(P=="PI"){
-        ui->display->setText(QString::number(3.1415926));
-    }
-}
 

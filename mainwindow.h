@@ -52,6 +52,8 @@ private slots:
 
     void on_PI_clicked();
 
+    void on_XY_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
