@@ -95,16 +95,22 @@ QString MainWindow::calculation(bool *ok)
         ui->statusbar->showMessage(QString("calculation is in progress: opeands is %1,opcode is %2").arg(operands.size()).arg(opcodes.size()));
     }
     else{
-        ui->statusbar->showMessage(QString("opeands is %1,opcode is %2").arg(operands.size()).arg(opcodes.size()));
+        ui->statusbar->showMessage(QString("opeands is %1,opcodes is %2").arg(operands.size()).arg(opcodes.size()));
     }
     return QString::number(result);
 }
 
 void MainWindow::btnUnaryOperatorClicked()
 {
-    if(operand!="")
+    double result;
+    if(operands.size() == 1||operand!="")
     {
-        double result=operand.toDouble();
+        if(operand==""){
+            result = operands.front().toDouble();
+            operands.pop_front();
+        }else{
+            result = operand.toDouble();
+        }
         operand="";
         QString op = qobject_cast<QPushButton *>(sender())->text();
         if (op == "%")
@@ -147,6 +153,7 @@ void MainWindow::btnUnaryOperatorClicked()
             }
             result=value;
         }
+        operands.push_back(QString::number(result));
         ui->display->setText(QString :: number(result));
     }
 }
@@ -164,6 +171,7 @@ void MainWindow::btnNumclicked()
     }
     operand+=digit;
     ui->display->setText(operand);
+
 }
 
 
@@ -197,11 +205,10 @@ void MainWindow::btnBinaryOperatorClicked()
     {
         operands.push_back(operand);
         operand="";
-
-        opcodes.push_back(opcode);
-        QString result=calculation();
-        ui->display->setText(result);
     }
+    opcodes.push_back(opcode);
+    QString result=calculation();
+    ui->display->setText(result);
 }
 
 void MainWindow::on_denghao_clicked()
