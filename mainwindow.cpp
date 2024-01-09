@@ -67,6 +67,20 @@ MainWindow::~MainWindow()
 QString MainWindow::calculation(bool *ok)
 {
     double result = 0;
+    if(operands.size()==1){
+        QString opcode = opcodes.front();
+        double operand = operands.front().toDouble();
+        operands.pop_front();
+        opcodes. pop_front();
+        if(opcode=="-"){
+            result-=operand;
+        }else if(opcode=="+"){
+            result+=operand;
+        }
+        operands.push_back(QString::number(result));
+    }
+
+
     if (operands.size() == 2 && opcodes.size() > 0 ) {
         //取操作数
         double operand1 = operands.front().toDouble();
@@ -89,7 +103,7 @@ QString MainWindow::calculation(bool *ok)
         }else if(op=="mod"){
             result = fmod(operand1,operand2);
         }
-
+        if(result!=0)
         operands.push_back(QString::number(result));
 
         ui->statusbar->showMessage(QString("calculation is in progress: opeands is %1,opcode is %2").arg(operands.size()).arg(opcodes.size()));
@@ -169,6 +183,7 @@ void MainWindow::btnNumclicked()
         digit="";
         operand="3.1415926";
     }
+
     operand+=digit;
     ui->display->setText(operand);
 
@@ -195,6 +210,8 @@ void MainWindow::on_cleanAll_clicked()
 {
     operand.clear();
     operands.clear();
+    opcode.clear();
+    opcodes.clear();
     ui->display->setText(operand);
 }
 
@@ -207,8 +224,10 @@ void MainWindow::btnBinaryOperatorClicked()
         operand="";
     }
     opcodes.push_back(opcode);
+    ui->display->setText(opcode);
     QString result=calculation();
     ui->display->setText(result);
+
 }
 
 void MainWindow::on_denghao_clicked()
