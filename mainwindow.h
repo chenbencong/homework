@@ -27,7 +27,9 @@ public:
 
 private slots:
     void btnNumclicked();
+
     void btnBinaryOperatorClicked();
+
     void btnUnaryOperatorClicked();
 
     void on_xiaoshudian_clicked();
@@ -44,15 +46,6 @@ private slots:
 
     void on_qingchu_clicked();
 
-    void on_sin_clicked();
-
-    void on_cos_clicked();
-
-    void on_tan_clicked();
-
-    void on_PI_clicked();
-
-    void on_XY_clicked();
 
 private:
     Ui::MainWindow *ui;

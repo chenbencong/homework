@@ -67,19 +67,6 @@ MainWindow::~MainWindow()
 QString MainWindow::calculation(bool *ok)
 {
     double result = 0;
-    if(operands.size()==1){
-        QString opcode = opcodes.front();
-        double operand = operands.front().toDouble();
-        operands.pop_front();
-        opcodes. pop_front();
-        if(opcode=="-"){
-            result-=operand;
-        }else if(opcode=="+"){
-            result+=operand;
-        }
-        operands.push_back(QString::number(result));
-    }
-
 
     if (operands.size() == 2 && opcodes.size() > 0 ) {
         //取操作数
@@ -111,6 +98,20 @@ QString MainWindow::calculation(bool *ok)
     else{
         ui->statusbar->showMessage(QString("opeands is %1,opcodes is %2").arg(operands.size()).arg(opcodes.size()));
     }
+
+    if(operands.size()==1&&opcodes.size()==2){
+        QString opcode = opcodes.front();
+        double operand = operands.front().toDouble();
+        operands.pop_front();
+        opcodes. pop_front();
+        if(opcode=="-"){
+        result-=operand;
+        }else if(opcode=="+"){
+        result+=operand;
+        }
+        operands.push_back(QString::number(result));
+    }
+
     return QString::number(result);
 }
 
@@ -119,13 +120,13 @@ void MainWindow::btnUnaryOperatorClicked()
     double result;
     if(operands.size() == 1||operand!="")
     {
-        if(operand==""){
+        QString text=ui->display->text();
+        if(text==""){
             result = operands.front().toDouble();
             operands.pop_front();
         }else{
-            result = operand.toDouble();
+            result = text.toDouble();
         }
-        operand="";
         QString op = qobject_cast<QPushButton *>(sender())->text();
         if (op == "%")
             result /= 100.0;
